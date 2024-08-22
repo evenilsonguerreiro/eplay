@@ -1,39 +1,47 @@
-import { useParams } from 'react-router-dom'
 import Hero from '../../Hero'
 import Section from '../../Section'
 import Gallery from '../../../components/Gallery'
 
-import resdent from '../../../assets/imagem/resident.png'
+import { useEffect, useState } from 'react'
+import { Game } from '../Home'
+import { useParams } from 'react-router-dom'
 
 const Product = () => {
   const { id } = useParams()
 
+  const [game, setGame] = useState<Game>()
+
+  useEffect(() => {
+    fetch(`https://fake-api-tau.vercel.app/api/eplay/jogos/${id}`)
+      .then((res) => res.json())
+      .then((res) => setGame(res))
+  }, [id])
+
+  if (!game) {
+    return <h3>Carregando...</h3>
+  }
+
   return (
     <>
-      <Hero />
+      <Hero game={game} />
       <Section title="Sobre o jogo" background="black">
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
-          illo quas vero, velit ab sequi accusantium alias eum non provident
-          voluptas? Tempore exercitationem atque numquam, nisi aperiam
-          doloremque rem accusamus. Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Voluptates illo quas vero, velit ab sequi
-          accusantium alias eum non provident voluptas? Tempore exercitationem
-          atque numquam, nisi aperiam doloremque rem accusamus.
-        </p>
+        <p>{game.description}</p>
       </Section>
       <Section title="Mais detalhes" background="gray">
         <p>
-          <b>Voluptates illo quas</b> <br /> vero, velit ab sequi alias eum
-          <b>non provident voluptas</b> <br /> Tempore exercitationem numquam,
-          <b>nisi aperiam doloremque</b> <br /> rem accusamus. Lorem ipsum dsit
-          <b>amet consectetur adipisicing</b> <br /> elit. Voluptates illo vero,
-          <b>velit ab sequi accusantium</b> <br /> alias eum non voluptas?
-          <b>Tempore exercitationem</b> <br /> nisi aperiam doloremque
+          <b>Plataforma:</b> {game.details.system} <br />
+          <b>Desenvolvedor:</b> {game.details.developer} <br />
+          <b>Editora:</b> {game.details.publisher} <br />
+          <b>Indioma:</b> O jogo oferece suporte a diversos idiomas, incluido{' '}
+          {game.details.languages.join(', ')}
         </p>
       </Section>
       <div>
-        <Gallery name="jogo teste" defaultCover={resdent} />
+        <Gallery
+          name={game.name}
+          defaultCover={game.media.cover}
+          items={game.media.gallery}
+        />
       </div>
     </>
   )
