@@ -73,8 +73,13 @@ export const ModalContent = styled.div`
       font-weight: bold;
     }
   }
-  img {
+  img,
+  iframe {
     display: block;
     max-width: 100%;
+  }
+  iframe {
+    width: 100%;
+    height: 480px;
   }
 `

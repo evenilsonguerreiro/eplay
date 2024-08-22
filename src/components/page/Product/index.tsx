@@ -3,7 +3,7 @@ import Hero from '../../Hero'
 import Section from '../../Section'
 import Gallery from '../../../components/Gallery'
 
-import diablo from '../../../assets/imagem/diablo.png'
+import resdent from '../../../assets/imagem/resident.png'
 
 const Product = () => {
   const { id } = useParams()
@@ -33,7 +33,7 @@ const Product = () => {
         </p>
       </Section>
       <div>
-        <Gallery name="jogo teste" defaultCover={diablo} />
+        <Gallery name="jogo teste" defaultCover={resdent} />
       </div>
     </>
   )

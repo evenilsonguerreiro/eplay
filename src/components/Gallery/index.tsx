@@ -1,16 +1,13 @@
+import { useState } from 'react'
+import { GalleryItem } from '../page/Home'
+
 import banner from '../../assets/imagem/banner-homem-aranha.png'
-import star_wars from '../../assets/imagem/star_wars.png'
 import zoom from '../../assets/imagem/zoom.png'
 import play from '../../assets/imagem/play.png'
+import fundo from '../../assets/imagem/fundo_hogwarts.png'
 import Section from '../Section'
 import { Action, Item, Items, Modal, ModalContent } from './styles'
 import fechar from '../../assets/imagem/fechar.png'
-import { useState } from 'react'
-
-type GalleryItem = {
-  type: 'image' | 'video'
-  url: string
-}
 
 const mock: GalleryItem[] = [
   {
@@ -19,7 +16,7 @@ const mock: GalleryItem[] = [
   },
   {
     type: 'image',
-    url: star_wars
+    url: fundo
   },
   {
     type: 'video',
@@ -32,9 +29,17 @@ type Props = {
   name: string
 }
 
+interface ModalState extends GalleryItem {
+  inVisible: boolean
+}
+
 const Gallery = ({ defaultCover, name }: Props) => {
-  const [ModalEstaAberto, setModalEstaAberto] = useState(false)
-  const [ModalUrl, setModalUrl] = useState('')
+  const [modal, setModal] = useState<ModalState>({
+    inVisible: false,
+    type: 'image',
+    url: ''
+  })
+
   const getMediaCover = (item: GalleryItem) => {
     if (item.type === 'image') return item.url
     return defaultCover
@@ -44,6 +49,15 @@ const Gallery = ({ defaultCover, name }: Props) => {
     if (item.type === 'image') return zoom
     return play
   }
+
+  const closeModal = () => {
+    setModal({
+      inVisible: false,
+      type: 'image',
+      url: ''
+    })
+  }
+
   return (
     <>
       <Section title="Galeria" background="black">
@@ -52,8 +66,11 @@ const Gallery = ({ defaultCover, name }: Props) => {
             <Item
               key={media.url}
               onClick={() => {
-                setModalEstaAberto(true)
-                setModalUrl(media.url)
+                setModal({
+                  inVisible: true,
+                  type: media.type,
+                  url: media.url
+                })
               }}
             >
               <img
@@ -70,15 +87,29 @@ const Gallery = ({ defaultCover, name }: Props) => {
           ))}
         </Items>
       </Section>
-      <Modal className={ModalEstaAberto ? 'visivel' : ''}>
+      <Modal className={modal.inVisible ? 'visivel' : ''}>
         <ModalContent className="container">
           <header>
             <h4>{name}</h4>
-            <img src={fechar} onClick={() => setModalEstaAberto(false)} />
+            <img
+              src={fechar}
+              onClick={() => {
+                closeModal()
+              }}
+            />
           </header>
-          <img src={ModalUrl} />
+          {modal.type === 'image' ? (
+            <img src={modal.url} />
+          ) : (
+            <iframe frameBorder={0} src={modal.url} />
+          )}
         </ModalContent>
-        <div className="overlay"></div>
+        <div
+          onClick={() => {
+            closeModal()
+          }}
+          className="overlay"
+        ></div>
       </Modal>
     </>
   )
