@@ -20,12 +20,16 @@ const Hero = ({ game }: Props) => (
       <Infos>
         <h2>{game.name}</h2>
         <p>
-          <span> {formatPreco(game?.prices.old)} </span>
-          Por {formatPreco(game?.prices.current)}
+          {game.prices.discount && (
+            <span> {formatPreco(game?.prices.old)} </span>
+          )}
+          {game.prices.current && <>Por {formatPreco(game?.prices.current)}</>}
         </p>
-        <Button type={'button'} title={'click aqui'} variant={'primary'}>
-          Adicionar ao carrinho
-        </Button>
+        {game.prices.current && (
+          <Button type={'button'} title={'click aqui'} variant={'primary'}>
+            Adicionar ao carrinho
+          </Button>
+        )}
       </Infos>
     </div>
   </Banner>
